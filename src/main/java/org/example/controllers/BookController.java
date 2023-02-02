@@ -1,7 +1,9 @@
 package org.example.controllers;
 
 import org.example.daos.BookDAO;
+import org.example.daos.PersonDAO;
 import org.example.models.Book;
+import org.example.models.Person;
 import org.example.utils.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,17 +12,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/book")
 public class BookController {
     private final BookDAO bookDAO;
+    private final PersonDAO personDAO;
     private final BookValidator bookValidator;
     private static final String REDIRECT_BOOK = "redirect:/book";
 
     @Autowired
-    public BookController(BookDAO bookDAO, BookValidator bookValidator) {
+    public BookController(BookDAO bookDAO, PersonDAO personDAO, BookValidator bookValidator) {
         this.bookDAO = bookDAO;
+        this.personDAO = personDAO;
         this.bookValidator = bookValidator;
     }
 
@@ -32,8 +37,16 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public String getBook(@PathVariable("id") int id, Model model) {
+    public String getBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDAO.getBookById(id));
+
+        Optional<Person> bookOwner = bookDAO.getBookOwner(id);
+
+        if(bookOwner.isPresent()) {
+            model.addAttribute("person", bookOwner.get());
+        } else {
+            model.addAttribute("personList", personDAO.getPersonList());
+        }
 
         return "book/book";
     }
@@ -82,5 +95,12 @@ public class BookController {
         bookDAO.delete(id);
 
         return REDIRECT_BOOK;
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assignBook(@PathVariable("id") int id, @ModelAttribute("person") Person person) {
+        bookDAO.assignBook(person.getId(), id);
+
+        return REDIRECT_BOOK + "/" + id;
     }
 }

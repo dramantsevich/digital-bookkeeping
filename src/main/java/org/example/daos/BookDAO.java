@@ -1,6 +1,7 @@
 package org.example.daos;
 
 import org.example.models.Book;
+import org.example.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,5 +50,16 @@ public class BookDAO {
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Book WHERE id=?", id);
+    }
+
+    public Optional<Person> getBookOwner(int id) {
+        return jdbcTemplate.query("SELECT p.* FROM Book b JOIN Person p on p.id = b.person_id WHERE b.id=?",
+                new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
+                .stream()
+                .findAny();
+    }
+
+    public void assignBook( int personId, int bookId) {
+        jdbcTemplate.update("UPDATE Book SET person_id=? WHERE id=?", personId, bookId);
     }
 }
