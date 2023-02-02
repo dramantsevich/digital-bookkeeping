@@ -1,9 +1,20 @@
 package org.example.models;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class Book {
     private int id;
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 2, max = 100, message = "Title should be between 2 and 100 characters")
     private String title;
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 2, max = 100, message = "Author name should be between 2 and 100 characters")
+    @Pattern(regexp = "[А-Я]\\p{L}+ [А-Я]\\p{L}+", message = "Author should be in this format: Иванов Иван")
     private String author;
+    @Min(value = 1900, message = "Year should be grater than 1900")
     private int year;
 
     public Book() {}

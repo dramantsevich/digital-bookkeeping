@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDAO {
@@ -27,5 +28,17 @@ public class BookDAO {
                 .stream()
                 .findAny()
                 .orElse(null);
+    }
+
+    public Optional<Book> getBookByTitle(String title) {
+        return jdbcTemplate.query("SELECT * FROM Book WHERE title=?", new Object[]{title},
+                new BeanPropertyRowMapper<>(Book.class))
+                .stream()
+                .findAny();
+    }
+
+    public void save(Book book) {
+        jdbcTemplate.update("INSERT INTO Book(title, author, year) VALUES(?, ?, ?)",
+                book.getTitle(), book.getAuthor(), book.getYear());
     }
 }
