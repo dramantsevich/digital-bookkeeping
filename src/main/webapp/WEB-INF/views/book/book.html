@@ -11,6 +11,10 @@
 <hr/>
 <div th:if="${person}">
   <span>Книга сейчас у:</span> <span th:text="${person.getFullname()}">PERSON NAME</span>
+
+  <form th:method="PATCH" th:action="@{/book/{id}/release(id=${book.getId()})}">
+    <input type="submit" value="Освободить книгу"/>
+  </form>
 </div>
 <div th:if="${personList}">
   <span>Эта книга свободна</span>
