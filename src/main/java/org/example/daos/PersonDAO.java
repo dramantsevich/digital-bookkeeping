@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,5 +41,10 @@ public class PersonDAO {
     public void save(Person person) {
         jdbcTemplate.update("INSERT INTO Person(fullname, birthday) VALUES(?, ?)",
                 person.getFullname(), person.getBirthday());
+    }
+
+    public void update(int id, Person person) {
+        jdbcTemplate.update("UPDATE Person SET fullname=?, birthday=? WHERE id=?", person.getFullname(),
+                person.getBirthday(), id);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 @Controller
 @RequestMapping("/person")
@@ -51,6 +52,27 @@ public class PersonController {
             return "person/new";
         } else {
             personDAO.save(person);
+
+            return REDIRECT_PERSON;
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String getEditPage(@PathVariable("id") int id, Model model) {
+        model.addAttribute("person", personDAO.getPersonById(id));
+
+        return "person/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
+                         @PathVariable("id") int id) {
+        personValidator.validate(person, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            return "person/edit";
+        } else {
+            personDAO.update(id, person);
 
             return REDIRECT_PERSON;
         }
