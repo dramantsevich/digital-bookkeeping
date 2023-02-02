@@ -55,4 +55,25 @@ public class BookController {
             return REDIRECT_BOOK;
         }
     }
+
+    @GetMapping("/{id}/edit")
+    public String getEditPage(@PathVariable("id") int id, Model model) {
+        model.addAttribute("book", bookDAO.getBookById(id));
+
+        return "book/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String updateBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult,
+                             @PathVariable("id") int id) {
+        bookValidator.validate(book, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "book/edit";
+        } else {
+            bookDAO.update(id, book);
+
+            return REDIRECT_BOOK;
+        }
+    }
 }
