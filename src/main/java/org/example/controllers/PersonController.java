@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 
 @Controller
 @RequestMapping("/person")
@@ -41,14 +40,14 @@ public class PersonController {
 
     @GetMapping("/new")
     public String getNewPersonPage(@ModelAttribute("person") Person person) {
-        return"person/new";
+        return "person/new";
     }
 
     @PostMapping
     public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "person/new";
         } else {
             personDAO.save(person);
@@ -69,12 +68,19 @@ public class PersonController {
                          @PathVariable("id") int id) {
         personValidator.validate(person, bindingResult);
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "person/edit";
         } else {
             personDAO.update(id, person);
 
             return REDIRECT_PERSON;
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        personDAO.delete(id);
+
+        return REDIRECT_PERSON;
     }
 }
