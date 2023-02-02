@@ -1,34 +1,34 @@
 package org.example.models;
 
 public class Book {
-    private int book_id;
-    private String name;
+    private int id;
+    private String title;
     private String author;
     private int year;
 
     public Book() {}
 
-    public Book(int book_id, String name, String author, int year) {
-        this.book_id = book_id;
-        this.name = name;
+    public Book(int id, String title, String author, int year) {
+        this.id = id;
+        this.title = title;
         this.author = author;
         this.year = year;
     }
 
-    public int getBook_id() {
-        return book_id;
+    public int getId() {
+        return id;
     }
 
-    public void setBook_id(int book_id) {
-        this.book_id = book_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
